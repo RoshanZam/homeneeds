@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="HOMENEEDSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="orders">
+    <Key>
+      <PropertyRef Name="Order_ID" />
+    </Key>
+    <Property Name="Order_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Product_ID" Type="int" />
+    <Property Name="Customer_ID" Type="int" />
+    <Property Name="Purchased" Type="datetime" />
+    <Property Name="Delivery_Date" Type="datetime" />
+  </EntityType>
+  <EntityType Name="tblAdmin">
+    <Key>
+      <PropertyRef Name="Admin_ID" />
+    </Key>
+    <Property Name="Admin_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="20" />
+    <Property Name="Password" Type="varchar" MaxLength="12" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6013: The table/view 'HOMENEEDS.dbo.tblCart' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="tblCart">
+          <Property Name="Product_ID" Type="int" />
+          <Property Name="Customer_ID" Type="int" />
+          <Property Name="Quantity" Type="int" />
+        </EntityType>-->
+  <EntityType Name="tblCategories">
+    <Key>
+      <PropertyRef Name="Category_ID" />
+    </Key>
+    <Property Name="Category_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="tblCustomer">
+    <Key>
+      <PropertyRef Name="Customer_ID" />
+    </Key>
+    <Property Name="Customer_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="20" />
+    <Property Name="Email_Address" Type="varchar" MaxLength="40" />
+    <Property Name="Password" Type="varchar" MaxLength="12" />
+    <Property Name="Address" Type="varchar" MaxLength="100" />
+    <Property Name="Phone_Number" Type="varchar" MaxLength="10" />
+    <Property Name="Location_ID" Type="int" />
+  </EntityType>
+  <EntityType Name="tblCustomers">
+    <Key>
+      <PropertyRef Name="Customer_ID" />
+    </Key>
+    <Property Name="Customer_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="20" />
+    <Property Name="Password" Type="varchar" MaxLength="12" />
+    <Property Name="Address" Type="varchar" MaxLength="100" />
+    <Property Name="Phone_Number" Type="varchar" MaxLength="10" />
+    <Property Name="Location_ID" Type="int" />
+    <Property Name="Email_Address" Type="varchar" MaxLength="40" />
+  </EntityType>
+  <EntityType Name="tblLocations">
+    <Key>
+      <PropertyRef Name="Location_ID" />
+    </Key>
+    <Property Name="Location_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="20" />
+    <Property Name="Pincode" Type="varchar" MaxLength="10" />
+    <Property Name="Availablity" Type="int" />
+  </EntityType>
+  <EntityType Name="tblProducts">
+    <Key>
+      <PropertyRef Name="Product_ID" />
+    </Key>
+    <Property Name="Product_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="20" />
+    <Property Name="Description" Type="varchar" MaxLength="10" />
+    <Property Name="Quantity" Type="int" />
+    <Property Name="Category_ID" Type="int" />
+  </EntityType>
+  <Association Name="FK__orders__Customer__1CF15040">
+    <End Role="tblCustomers" Type="Self.tblCustomers" Multiplicity="0..1" />
+    <End Role="orders" Type="Self.orders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblCustomers">
+        <PropertyRef Name="Customer_ID" />
+      </Principal>
+      <Dependent Role="orders">
+        <PropertyRef Name="Customer_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__orders__Product___1BFD2C07">
+    <End Role="tblProducts" Type="Self.tblProducts" Multiplicity="0..1" />
+    <End Role="orders" Type="Self.orders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblProducts">
+        <PropertyRef Name="Product_ID" />
+      </Principal>
+      <Dependent Role="orders">
+        <PropertyRef Name="Product_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__tblCustom__Locat__36B12243">
+    <End Role="tblLocations" Type="Self.tblLocations" Multiplicity="0..1" />
+    <End Role="tblCustomers" Type="Self.tblCustomers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblLocations">
+        <PropertyRef Name="Location_ID" />
+      </Principal>
+      <Dependent Role="tblCustomers">
+        <PropertyRef Name="Location_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__tblCustom__Locat__398D8EEE">
+    <End Role="tblLocations" Type="Self.tblLocations" Multiplicity="0..1" />
+    <End Role="tblCustomer" Type="Self.tblCustomer" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblLocations">
+        <PropertyRef Name="Location_ID" />
+      </Principal>
+      <Dependent Role="tblCustomer">
+        <PropertyRef Name="Location_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__tblProduc__Categ__164452B1">
+    <End Role="tblCategories" Type="Self.tblCategories" Multiplicity="0..1" />
+    <End Role="tblProducts" Type="Self.tblProducts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblCategories">
+        <PropertyRef Name="Category_ID" />
+      </Principal>
+      <Dependent Role="tblProducts">
+        <PropertyRef Name="Category_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="uspRegisterUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Email_Address" Type="varchar" Mode="In" />
+    <Parameter Name="Password" Type="varchar" Mode="In" />
+  </Function>
+  <EntityContainer Name="HOMENEEDSModelStoreContainer">
+    <EntitySet Name="orders" EntityType="Self.orders" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblAdmin" EntityType="Self.tblAdmin" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblCategories" EntityType="Self.tblCategories" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblCustomer" EntityType="Self.tblCustomer" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblCustomers" EntityType="Self.tblCustomers" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblLocations" EntityType="Self.tblLocations" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblProducts" EntityType="Self.tblProducts" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK__orders__Customer__1CF15040" Association="Self.FK__orders__Customer__1CF15040">
+      <End Role="tblCustomers" EntitySet="tblCustomers" />
+      <End Role="orders" EntitySet="orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK__orders__Product___1BFD2C07" Association="Self.FK__orders__Product___1BFD2C07">
+      <End Role="tblProducts" EntitySet="tblProducts" />
+      <End Role="orders" EntitySet="orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK__tblCustom__Locat__36B12243" Association="Self.FK__tblCustom__Locat__36B12243">
+      <End Role="tblLocations" EntitySet="tblLocations" />
+      <End Role="tblCustomers" EntitySet="tblCustomers" />
+    </AssociationSet>
+    <AssociationSet Name="FK__tblCustom__Locat__398D8EEE" Association="Self.FK__tblCustom__Locat__398D8EEE">
+      <End Role="tblLocations" EntitySet="tblLocations" />
+      <End Role="tblCustomer" EntitySet="tblCustomer" />
+    </AssociationSet>
+    <AssociationSet Name="FK__tblProduc__Categ__164452B1" Association="Self.FK__tblProduc__Categ__164452B1">
+      <End Role="tblCategories" EntitySet="tblCategories" />
+      <End Role="tblProducts" EntitySet="tblProducts" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="HOMENEEDSModelStoreContainer" CdmEntityContainer="HOMENEEDSEntities">
+    <EntitySetMapping Name="orders">
+      <EntityTypeMapping TypeName="HOMENEEDSModel.order">
+        <MappingFragment StoreEntitySet="orders">
+          <ScalarProperty Name="Order_ID" ColumnName="Order_ID" />
+          <ScalarProperty Name="Product_ID" ColumnName="Product_ID" />
+          <ScalarProperty Name="Customer_ID" ColumnName="Customer_ID" />
+          <ScalarProperty Name="Purchased" ColumnName="Purchased" />
+          <ScalarProperty Name="Delivery_Date" ColumnName="Delivery_Date" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblAdmins">
+      <EntityTypeMapping TypeName="HOMENEEDSModel.tblAdmin">
+        <MappingFragment StoreEntitySet="tblAdmin">
+          <ScalarProperty Name="Admin_ID" ColumnName="Admin_ID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblCategories">
+      <EntityTypeMapping TypeName="HOMENEEDSModel.tblCategory">
+        <MappingFragment StoreEntitySet="tblCategories">
+          <ScalarProperty Name="Category_ID" ColumnName="Category_ID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblCustomers">
+      <EntityTypeMapping TypeName="HOMENEEDSModel.tblCustomer">
+        <MappingFragment StoreEntitySet="tblCustomers">
+          <ScalarProperty Name="Email_Address" ColumnName="Email_Address" />
+          <ScalarProperty Name="Customer_ID" ColumnName="Customer_ID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="Phone_Number" ColumnName="Phone_Number" />
+          <ScalarProperty Name="Location_ID" ColumnName="Location_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblLocations">
+      <EntityTypeMapping TypeName="HOMENEEDSModel.tblLocation">
+        <MappingFragment StoreEntitySet="tblLocations">
+          <ScalarProperty Name="Location_ID" ColumnName="Location_ID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Pincode" ColumnName="Pincode" />
+          <ScalarProperty Name="Availablity" ColumnName="Availablity" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblProducts">
+      <EntityTypeMapping TypeName="HOMENEEDSModel.tblProduct">
+        <MappingFragment StoreEntitySet="tblProducts">
+          <ScalarProperty Name="Product_ID" ColumnName="Product_ID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="Category_ID" ColumnName="Category_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="uspRegisterUser" FunctionName="HOMENEEDSModel.Store.uspRegisterUser" />
+    <EntitySetMapping Name="tblCustomer1">
+      <EntityTypeMapping TypeName="HOMENEEDSModel.tblCustomer1">
+        <MappingFragment StoreEntitySet="tblCustomer">
+          <ScalarProperty Name="Location_ID" ColumnName="Location_ID" />
+          <ScalarProperty Name="Phone_Number" ColumnName="Phone_Number" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Email_Address" ColumnName="Email_Address" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Customer_ID" ColumnName="Customer_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
