@@ -4,6 +4,7 @@
     <EntitySetMapping Name="orders">
       <EntityTypeMapping TypeName="HOMENEEDSModel.order">
         <MappingFragment StoreEntitySet="orders">
+          <ScalarProperty Name="Order_Status" ColumnName="Order_Status" />
           <ScalarProperty Name="Order_ID" ColumnName="Order_ID" />
           <ScalarProperty Name="Product_ID" ColumnName="Product_ID" />
           <ScalarProperty Name="Customer_ID" ColumnName="Customer_ID" />
@@ -55,6 +56,7 @@
     <EntitySetMapping Name="tblProducts">
       <EntityTypeMapping TypeName="HOMENEEDSModel.tblProduct">
         <MappingFragment StoreEntitySet="tblProducts">
+          <ScalarProperty Name="Price" ColumnName="Price" />
           <ScalarProperty Name="Product_ID" ColumnName="Product_ID" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="Description" ColumnName="Description" />
@@ -66,5 +68,58 @@
     <FunctionImportMapping FunctionImportName="uspRegisterUser" FunctionName="HOMENEEDSModel.Store.uspRegisterUser" />
     <FunctionImportMapping FunctionImportName="uspCheckUserAlreadyRegistered" FunctionName="HOMENEEDSModel.Store.uspCheckUserAlreadyRegistered" />
     <FunctionImportMapping FunctionImportName="uspLogin" FunctionName="HOMENEEDSModel.Store.uspLogin" />
+    <FunctionImportMapping FunctionImportName="uspAddtoCart" FunctionName="HOMENEEDSModel.Store.uspAddtoCart" />
+    <FunctionImportMapping FunctionImportName="uspDeleteFromCartUsingCustomerId" FunctionName="HOMENEEDSModel.Store.uspDeleteFromCartUsingCustomerId" />
+    <FunctionImportMapping FunctionImportName="uspDeleteFromCartUsingProductId" FunctionName="HOMENEEDSModel.Store.uspDeleteFromCartUsingProductId" />
+    <FunctionImportMapping FunctionImportName="uspGetAllProducts" FunctionName="HOMENEEDSModel.Store.uspGetAllProducts">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="HOMENEEDSModel.uspGetAllProducts_Result">
+          <ScalarProperty Name="Product_ID" ColumnName="Product_ID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="Category_ID" ColumnName="Category_ID" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="uspGetAllProductsBasedOnCategory" FunctionName="HOMENEEDSModel.Store.uspGetAllProductsBasedOnCategory">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="HOMENEEDSModel.uspGetAllProductsBasedOnCategory_Result">
+          <ScalarProperty Name="Product_ID" ColumnName="Product_ID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="Category_ID" ColumnName="Category_ID" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="uspGetCustomerDetails" FunctionName="HOMENEEDSModel.Store.uspGetCustomerDetails">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="HOMENEEDSModel.uspGetCustomerDetails_Result">
+          <ScalarProperty Name="Customer_ID" ColumnName="Customer_ID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Email_Address" ColumnName="Email_Address" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="Phone_Number" ColumnName="Phone_Number" />
+          <ScalarProperty Name="Location_ID" ColumnName="Location_ID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="uspUpdateAddress" FunctionName="HOMENEEDSModel.Store.uspUpdateAddress" />
+    <EntitySetMapping Name="tblCarts">
+      <EntityTypeMapping TypeName="HOMENEEDSModel.tblCart">
+        <MappingFragment StoreEntitySet="tblCart">
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="Customer_ID" ColumnName="Customer_ID" />
+          <ScalarProperty Name="Product_ID" ColumnName="Product_ID" />
+          <ScalarProperty Name="Item_No" ColumnName="Item_No" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="usp_AddCategoryByAdmin" FunctionName="HOMENEEDSModel.Store.usp_AddCategoryByAdmin" />
+    <FunctionImportMapping FunctionImportName="usp_AddProductByAdmin" FunctionName="HOMENEEDSModel.Store.usp_AddProductByAdmin" />
   </EntityContainerMapping>
 </Mapping>

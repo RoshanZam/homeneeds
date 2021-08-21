@@ -33,6 +33,7 @@ namespace ECommerce.Models
         public virtual DbSet<tblCustomer> tblCustomers { get; set; }
         public virtual DbSet<tblLocation> tblLocations { get; set; }
         public virtual DbSet<tblProduct> tblProducts { get; set; }
+        public virtual DbSet<tblCart> tblCarts { get; set; }
     
         public virtual int uspRegisterUser(string email_Address, string password)
         {
@@ -75,6 +76,111 @@ namespace ECommerce.Models
                 new ObjectParameter("password", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("uspLogin", email_AddressParameter, mobile_numberParameter, passwordParameter);
+        }
+    
+        public virtual int uspAddtoCart(Nullable<int> product_id, Nullable<int> customer_id, Nullable<int> quantity)
+        {
+            var product_idParameter = product_id.HasValue ?
+                new ObjectParameter("product_id", product_id) :
+                new ObjectParameter("product_id", typeof(int));
+    
+            var customer_idParameter = customer_id.HasValue ?
+                new ObjectParameter("customer_id", customer_id) :
+                new ObjectParameter("customer_id", typeof(int));
+    
+            var quantityParameter = quantity.HasValue ?
+                new ObjectParameter("quantity", quantity) :
+                new ObjectParameter("quantity", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("uspAddtoCart", product_idParameter, customer_idParameter, quantityParameter);
+        }
+    
+        public virtual int uspDeleteFromCartUsingCustomerId(Nullable<int> customer_id)
+        {
+            var customer_idParameter = customer_id.HasValue ?
+                new ObjectParameter("customer_id", customer_id) :
+                new ObjectParameter("customer_id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("uspDeleteFromCartUsingCustomerId", customer_idParameter);
+        }
+    
+        public virtual int uspDeleteFromCartUsingProductId(Nullable<int> product_id)
+        {
+            var product_idParameter = product_id.HasValue ?
+                new ObjectParameter("product_id", product_id) :
+                new ObjectParameter("product_id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("uspDeleteFromCartUsingProductId", product_idParameter);
+        }
+    
+        public virtual ObjectResult<uspGetAllProducts_Result> uspGetAllProducts()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<uspGetAllProducts_Result>("uspGetAllProducts");
+        }
+    
+        public virtual ObjectResult<uspGetAllProductsBasedOnCategory_Result> uspGetAllProductsBasedOnCategory(Nullable<int> category_id)
+        {
+            var category_idParameter = category_id.HasValue ?
+                new ObjectParameter("category_id", category_id) :
+                new ObjectParameter("category_id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<uspGetAllProductsBasedOnCategory_Result>("uspGetAllProductsBasedOnCategory", category_idParameter);
+        }
+    
+        public virtual ObjectResult<uspGetCustomerDetails_Result> uspGetCustomerDetails(Nullable<int> customer_id)
+        {
+            var customer_idParameter = customer_id.HasValue ?
+                new ObjectParameter("customer_id", customer_id) :
+                new ObjectParameter("customer_id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<uspGetCustomerDetails_Result>("uspGetCustomerDetails", customer_idParameter);
+        }
+    
+        public virtual int uspUpdateAddress(string new_address, string email_adress)
+        {
+            var new_addressParameter = new_address != null ?
+                new ObjectParameter("new_address", new_address) :
+                new ObjectParameter("new_address", typeof(string));
+    
+            var email_adressParameter = email_adress != null ?
+                new ObjectParameter("email_adress", email_adress) :
+                new ObjectParameter("email_adress", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("uspUpdateAddress", new_addressParameter, email_adressParameter);
+        }
+    
+        public virtual int usp_AddCategoryByAdmin(string name)
+        {
+            var nameParameter = name != null ?
+                new ObjectParameter("Name", name) :
+                new ObjectParameter("Name", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("usp_AddCategoryByAdmin", nameParameter);
+        }
+    
+        public virtual int usp_AddProductByAdmin(string name, string description, Nullable<int> quantity, string category, Nullable<double> price)
+        {
+            var nameParameter = name != null ?
+                new ObjectParameter("Name", name) :
+                new ObjectParameter("Name", typeof(string));
+    
+            var descriptionParameter = description != null ?
+                new ObjectParameter("Description", description) :
+                new ObjectParameter("Description", typeof(string));
+    
+            var quantityParameter = quantity.HasValue ?
+                new ObjectParameter("Quantity", quantity) :
+                new ObjectParameter("Quantity", typeof(int));
+    
+            var categoryParameter = category != null ?
+                new ObjectParameter("Category", category) :
+                new ObjectParameter("Category", typeof(string));
+    
+            var priceParameter = price.HasValue ?
+                new ObjectParameter("price", price) :
+                new ObjectParameter("price", typeof(double));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("usp_AddProductByAdmin", nameParameter, descriptionParameter, quantityParameter, categoryParameter, priceParameter);
         }
     }
 }

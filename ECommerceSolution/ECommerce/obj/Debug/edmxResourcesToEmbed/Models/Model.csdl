@@ -10,6 +10,7 @@
     <Property Name="Purchased" Type="DateTime" Precision="3" />
     <Property Name="Delivery_Date" Type="DateTime" Precision="3" />
     <NavigationProperty Name="tblProduct" Relationship="Self.FK__orders__Product___1BFD2C07" FromRole="orders" ToRole="tblProducts" />
+    <Property Name="Order_Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
   </EntityType>
   <EntityType Name="tblAdmin">
     <Key>
@@ -55,12 +56,13 @@
       <PropertyRef Name="Product_ID" />
     </Key>
     <Property Name="Product_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="Description" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
     <Property Name="Quantity" Type="Int32" />
     <Property Name="Category_ID" Type="Int32" />
     <NavigationProperty Name="orders" Relationship="Self.FK__orders__Product___1BFD2C07" FromRole="tblProducts" ToRole="orders" />
     <NavigationProperty Name="tblCategory" Relationship="Self.FK__tblProduc__Categ__164452B1" FromRole="tblProducts" ToRole="tblCategories" />
+    <Property Name="Price" Type="Double" />
   </EntityType>
   <Association Name="FK__orders__Product___1BFD2C07">
     <End Role="tblProducts" Type="Self.tblProduct" Multiplicity="0..1" />
@@ -130,5 +132,72 @@
       <Parameter Name="mobile_number" Mode="In" Type="String" />
       <Parameter Name="password" Mode="In" Type="String" />
     </FunctionImport>
+    <FunctionImport Name="uspAddtoCart">
+      <Parameter Name="product_id" Mode="In" Type="Int32" />
+      <Parameter Name="customer_id" Mode="In" Type="Int32" />
+      <Parameter Name="quantity" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspDeleteFromCartUsingCustomerId">
+      <Parameter Name="customer_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspDeleteFromCartUsingProductId">
+      <Parameter Name="product_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspGetAllProducts" ReturnType="Collection(HOMENEEDSModel.uspGetAllProducts_Result)" />
+    <FunctionImport Name="uspGetAllProductsBasedOnCategory" ReturnType="Collection(HOMENEEDSModel.uspGetAllProductsBasedOnCategory_Result)">
+      <Parameter Name="category_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspGetCustomerDetails" ReturnType="Collection(HOMENEEDSModel.uspGetCustomerDetails_Result)">
+      <Parameter Name="customer_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspUpdateAddress">
+      <Parameter Name="new_address" Mode="In" Type="String" />
+      <Parameter Name="email_adress" Mode="In" Type="String" />
+    </FunctionImport>
+    <EntitySet Name="tblCarts" EntityType="HOMENEEDSModel.tblCart" />
+    <FunctionImport Name="usp_AddCategoryByAdmin">
+      <Parameter Name="Name" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="usp_AddProductByAdmin">
+      <Parameter Name="Name" Mode="In" Type="String" />
+      <Parameter Name="Description" Mode="In" Type="String" />
+      <Parameter Name="Quantity" Mode="In" Type="Int32" />
+      <Parameter Name="Category" Mode="In" Type="String" />
+      <Parameter Name="price" Mode="In" Type="Double" />
+    </FunctionImport>
   </EntityContainer>
+  <ComplexType Name="uspGetAllProducts_Result">
+    <Property Type="Int32" Name="Product_ID" Nullable="false" />
+    <Property Type="String" Name="Name" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Description" Nullable="true" MaxLength="100" />
+    <Property Type="Int32" Name="Quantity" Nullable="true" />
+    <Property Type="Int32" Name="Category_ID" Nullable="true" />
+    <Property Type="Double" Name="Price" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="uspGetAllProductsBasedOnCategory_Result">
+    <Property Type="Int32" Name="Product_ID" Nullable="false" />
+    <Property Type="String" Name="Name" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Description" Nullable="true" MaxLength="100" />
+    <Property Type="Int32" Name="Quantity" Nullable="true" />
+    <Property Type="Int32" Name="Category_ID" Nullable="true" />
+    <Property Type="Double" Name="Price" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="uspGetCustomerDetails_Result">
+    <Property Type="Int32" Name="Customer_ID" Nullable="false" />
+    <Property Type="String" Name="Name" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="Password" Nullable="true" MaxLength="12" />
+    <Property Type="String" Name="Email_Address" Nullable="true" MaxLength="40" />
+    <Property Type="String" Name="Address" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="Phone_Number" Nullable="true" MaxLength="10" />
+    <Property Type="Int32" Name="Location_ID" Nullable="true" />
+  </ComplexType>
+  <EntityType Name="tblCart">
+    <Key>
+      <PropertyRef Name="Item_No" />
+    </Key>
+    <Property Name="Item_No" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Product_ID" Type="Int32" />
+    <Property Name="Customer_ID" Type="Int32" />
+    <Property Name="Quantity" Type="Int32" />
+  </EntityType>
 </Schema>

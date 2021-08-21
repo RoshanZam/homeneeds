@@ -1,0 +1,5 @@
+common home page - login,register
+
+login - user homepage, 
+user homepage - product details, checkout, placeorder,userprofile
+

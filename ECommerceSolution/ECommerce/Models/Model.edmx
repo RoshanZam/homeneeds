@@ -14,6 +14,7 @@
           <Property Name="Customer_ID" Type="int" />
           <Property Name="Purchased" Type="datetime" />
           <Property Name="Delivery_Date" Type="datetime" />
+          <Property Name="Order_Status" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="tblAdmin">
           <Key>
@@ -23,13 +24,15 @@
           <Property Name="Name" Type="varchar" MaxLength="20" />
           <Property Name="Password" Type="varchar" MaxLength="12" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'HOMENEEDS.dbo.tblCart' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
         <EntityType Name="tblCart">
+          <Key>
+            <PropertyRef Name="Item_No" />
+          </Key>
+          <Property Name="Item_No" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Product_ID" Type="int" />
           <Property Name="Customer_ID" Type="int" />
           <Property Name="Quantity" Type="int" />
-        </EntityType>-->
+        </EntityType>
         <EntityType Name="tblCategories">
           <Key>
             <PropertyRef Name="Category_ID" />
@@ -63,10 +66,11 @@ warning 6013: The table/view 'HOMENEEDS.dbo.tblCart' does not have a primary key
             <PropertyRef Name="Product_ID" />
           </Key>
           <Property Name="Product_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="20" />
-          <Property Name="Description" Type="varchar" MaxLength="10" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="Description" Type="varchar" MaxLength="100" />
           <Property Name="Quantity" Type="int" />
           <Property Name="Category_ID" Type="int" />
+          <Property Name="Price" Type="float" />
         </EntityType>
         <Association Name="FK__orders__Product___1BFD2C07">
           <End Role="tblProducts" Type="Self.tblProducts" Multiplicity="0..1" />
@@ -104,9 +108,37 @@ warning 6013: The table/view 'HOMENEEDS.dbo.tblCart' does not have a primary key
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="usp_AddCategoryByAdmin" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Name" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="usp_AddProductByAdmin" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Name" Type="varchar" Mode="In" />
+          <Parameter Name="Description" Type="varchar" Mode="In" />
+          <Parameter Name="Quantity" Type="int" Mode="In" />
+          <Parameter Name="Category" Type="varchar" Mode="In" />
+          <Parameter Name="price" Type="float" Mode="In" />
+        </Function>
+        <Function Name="uspAddtoCart" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="product_id" Type="int" Mode="In" />
+          <Parameter Name="customer_id" Type="int" Mode="In" />
+          <Parameter Name="quantity" Type="int" Mode="In" />
+        </Function>
         <Function Name="uspCheckUserAlreadyRegistered" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Email_Address" Type="varchar" Mode="In" />
           <Parameter Name="mobile_number" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="uspDeleteFromCartUsingCustomerId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="customer_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="uspDeleteFromCartUsingProductId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="product_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="uspGetAllProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="uspGetAllProductsBasedOnCategory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="category_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="uspGetCustomerDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="customer_id" Type="int" Mode="In" />
         </Function>
         <Function Name="uspLogin" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Email_Address" Type="varchar" Mode="In" />
@@ -117,9 +149,14 @@ warning 6013: The table/view 'HOMENEEDS.dbo.tblCart' does not have a primary key
           <Parameter Name="Email_Address" Type="varchar" Mode="In" />
           <Parameter Name="Password" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="uspUpdateAddress" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="new_address" Type="varchar" Mode="In" />
+          <Parameter Name="email_adress" Type="varchar" Mode="In" />
+        </Function>
         <EntityContainer Name="HOMENEEDSModelStoreContainer">
           <EntitySet Name="orders" EntityType="Self.orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblAdmin" EntityType="Self.tblAdmin" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblCart" EntityType="Self.tblCart" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblCategories" EntityType="Self.tblCategories" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblCustomers" EntityType="Self.tblCustomers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblLocations" EntityType="Self.tblLocations" Schema="dbo" store:Type="Tables" />
@@ -151,6 +188,7 @@ warning 6013: The table/view 'HOMENEEDS.dbo.tblCart' does not have a primary key
           <Property Name="Purchased" Type="DateTime" Precision="3" />
           <Property Name="Delivery_Date" Type="DateTime" Precision="3" />
           <NavigationProperty Name="tblProduct" Relationship="Self.FK__orders__Product___1BFD2C07" FromRole="orders" ToRole="tblProducts" />
+          <Property Name="Order_Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="tblAdmin">
           <Key>
@@ -196,12 +234,13 @@ warning 6013: The table/view 'HOMENEEDS.dbo.tblCart' does not have a primary key
             <PropertyRef Name="Product_ID" />
           </Key>
           <Property Name="Product_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Description" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Quantity" Type="Int32" />
           <Property Name="Category_ID" Type="Int32" />
           <NavigationProperty Name="orders" Relationship="Self.FK__orders__Product___1BFD2C07" FromRole="tblProducts" ToRole="orders" />
           <NavigationProperty Name="tblCategory" Relationship="Self.FK__tblProduc__Categ__164452B1" FromRole="tblProducts" ToRole="tblCategories" />
+          <Property Name="Price" Type="Double" />
         </EntityType>
         <Association Name="FK__orders__Product___1BFD2C07">
           <End Role="tblProducts" Type="Self.tblProduct" Multiplicity="0..1" />
@@ -271,7 +310,74 @@ warning 6013: The table/view 'HOMENEEDS.dbo.tblCart' does not have a primary key
             <Parameter Name="mobile_number" Mode="In" Type="String" />
             <Parameter Name="password" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="uspAddtoCart">
+            <Parameter Name="product_id" Mode="In" Type="Int32" />
+            <Parameter Name="customer_id" Mode="In" Type="Int32" />
+            <Parameter Name="quantity" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="uspDeleteFromCartUsingCustomerId">
+          <Parameter Name="customer_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="uspDeleteFromCartUsingProductId">
+          <Parameter Name="product_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="uspGetAllProducts" ReturnType="Collection(HOMENEEDSModel.uspGetAllProducts_Result)" />
+          <FunctionImport Name="uspGetAllProductsBasedOnCategory" ReturnType="Collection(HOMENEEDSModel.uspGetAllProductsBasedOnCategory_Result)">
+          <Parameter Name="category_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="uspGetCustomerDetails" ReturnType="Collection(HOMENEEDSModel.uspGetCustomerDetails_Result)">
+          <Parameter Name="customer_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="uspUpdateAddress">
+            <Parameter Name="new_address" Mode="In" Type="String" />
+            <Parameter Name="email_adress" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="tblCarts" EntityType="HOMENEEDSModel.tblCart" />
+          <FunctionImport Name="usp_AddCategoryByAdmin">
+            <Parameter Name="Name" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="usp_AddProductByAdmin">
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Description" Mode="In" Type="String" />
+            <Parameter Name="Quantity" Mode="In" Type="Int32" />
+            <Parameter Name="Category" Mode="In" Type="String" />
+            <Parameter Name="price" Mode="In" Type="Double" />
+          </FunctionImport>
         </EntityContainer>
+        <ComplexType Name="uspGetAllProducts_Result">
+          <Property Type="Int32" Name="Product_ID" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="Quantity" Nullable="true" />
+          <Property Type="Int32" Name="Category_ID" Nullable="true" />
+          <Property Type="Double" Name="Price" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="uspGetAllProductsBasedOnCategory_Result">
+          <Property Type="Int32" Name="Product_ID" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="Quantity" Nullable="true" />
+          <Property Type="Int32" Name="Category_ID" Nullable="true" />
+          <Property Type="Double" Name="Price" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="uspGetCustomerDetails_Result">
+          <Property Type="Int32" Name="Customer_ID" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Password" Nullable="true" MaxLength="12" />
+          <Property Type="String" Name="Email_Address" Nullable="true" MaxLength="40" />
+          <Property Type="String" Name="Address" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Phone_Number" Nullable="true" MaxLength="10" />
+          <Property Type="Int32" Name="Location_ID" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="tblCart">
+          <Key>
+            <PropertyRef Name="Item_No" />
+          </Key>
+          <Property Name="Item_No" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Product_ID" Type="Int32" />
+          <Property Name="Customer_ID" Type="Int32" />
+          <Property Name="Quantity" Type="Int32" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -281,6 +387,7 @@ warning 6013: The table/view 'HOMENEEDS.dbo.tblCart' does not have a primary key
           <EntitySetMapping Name="orders">
             <EntityTypeMapping TypeName="HOMENEEDSModel.order">
               <MappingFragment StoreEntitySet="orders">
+                <ScalarProperty Name="Order_Status" ColumnName="Order_Status" />
                 <ScalarProperty Name="Order_ID" ColumnName="Order_ID" />
                 <ScalarProperty Name="Product_ID" ColumnName="Product_ID" />
                 <ScalarProperty Name="Customer_ID" ColumnName="Customer_ID" />
@@ -332,6 +439,7 @@ warning 6013: The table/view 'HOMENEEDS.dbo.tblCart' does not have a primary key
           <EntitySetMapping Name="tblProducts">
             <EntityTypeMapping TypeName="HOMENEEDSModel.tblProduct">
               <MappingFragment StoreEntitySet="tblProducts">
+                <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="Product_ID" ColumnName="Product_ID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
@@ -343,6 +451,59 @@ warning 6013: The table/view 'HOMENEEDS.dbo.tblCart' does not have a primary key
           <FunctionImportMapping FunctionImportName="uspRegisterUser" FunctionName="HOMENEEDSModel.Store.uspRegisterUser" />
           <FunctionImportMapping FunctionImportName="uspCheckUserAlreadyRegistered" FunctionName="HOMENEEDSModel.Store.uspCheckUserAlreadyRegistered" />
           <FunctionImportMapping FunctionImportName="uspLogin" FunctionName="HOMENEEDSModel.Store.uspLogin" />
+          <FunctionImportMapping FunctionImportName="uspAddtoCart" FunctionName="HOMENEEDSModel.Store.uspAddtoCart" />
+          <FunctionImportMapping FunctionImportName="uspDeleteFromCartUsingCustomerId" FunctionName="HOMENEEDSModel.Store.uspDeleteFromCartUsingCustomerId" />
+          <FunctionImportMapping FunctionImportName="uspDeleteFromCartUsingProductId" FunctionName="HOMENEEDSModel.Store.uspDeleteFromCartUsingProductId" />
+          <FunctionImportMapping FunctionImportName="uspGetAllProducts" FunctionName="HOMENEEDSModel.Store.uspGetAllProducts">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HOMENEEDSModel.uspGetAllProducts_Result">
+                <ScalarProperty Name="Product_ID" ColumnName="Product_ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Category_ID" ColumnName="Category_ID" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="uspGetAllProductsBasedOnCategory" FunctionName="HOMENEEDSModel.Store.uspGetAllProductsBasedOnCategory">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HOMENEEDSModel.uspGetAllProductsBasedOnCategory_Result">
+                <ScalarProperty Name="Product_ID" ColumnName="Product_ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Category_ID" ColumnName="Category_ID" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="uspGetCustomerDetails" FunctionName="HOMENEEDSModel.Store.uspGetCustomerDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HOMENEEDSModel.uspGetCustomerDetails_Result">
+                <ScalarProperty Name="Customer_ID" ColumnName="Customer_ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email_Address" ColumnName="Email_Address" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Phone_Number" ColumnName="Phone_Number" />
+                <ScalarProperty Name="Location_ID" ColumnName="Location_ID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="uspUpdateAddress" FunctionName="HOMENEEDSModel.Store.uspUpdateAddress" />
+          <EntitySetMapping Name="tblCarts">
+            <EntityTypeMapping TypeName="HOMENEEDSModel.tblCart">
+              <MappingFragment StoreEntitySet="tblCart">
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Customer_ID" ColumnName="Customer_ID" />
+                <ScalarProperty Name="Product_ID" ColumnName="Product_ID" />
+                <ScalarProperty Name="Item_No" ColumnName="Item_No" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="usp_AddCategoryByAdmin" FunctionName="HOMENEEDSModel.Store.usp_AddCategoryByAdmin" />
+          <FunctionImportMapping FunctionImportName="usp_AddProductByAdmin" FunctionName="HOMENEEDSModel.Store.usp_AddProductByAdmin" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

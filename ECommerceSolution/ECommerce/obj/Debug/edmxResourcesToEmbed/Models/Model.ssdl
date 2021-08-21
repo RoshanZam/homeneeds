@@ -9,6 +9,7 @@
     <Property Name="Customer_ID" Type="int" />
     <Property Name="Purchased" Type="datetime" />
     <Property Name="Delivery_Date" Type="datetime" />
+    <Property Name="Order_Status" Type="varchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="tblAdmin">
     <Key>
@@ -18,13 +19,15 @@
     <Property Name="Name" Type="varchar" MaxLength="20" />
     <Property Name="Password" Type="varchar" MaxLength="12" />
   </EntityType>
-  <!--Errors Found During Generation:
-warning 6013: The table/view 'HOMENEEDS.dbo.tblCart' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="tblCart">
-          <Property Name="Product_ID" Type="int" />
-          <Property Name="Customer_ID" Type="int" />
-          <Property Name="Quantity" Type="int" />
-        </EntityType>-->
+  <EntityType Name="tblCart">
+    <Key>
+      <PropertyRef Name="Item_No" />
+    </Key>
+    <Property Name="Item_No" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Product_ID" Type="int" />
+    <Property Name="Customer_ID" Type="int" />
+    <Property Name="Quantity" Type="int" />
+  </EntityType>
   <EntityType Name="tblCategories">
     <Key>
       <PropertyRef Name="Category_ID" />
@@ -58,10 +61,11 @@ warning 6013: The table/view 'HOMENEEDS.dbo.tblCart' does not have a primary key
       <PropertyRef Name="Product_ID" />
     </Key>
     <Property Name="Product_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="Name" Type="varchar" MaxLength="20" />
-    <Property Name="Description" Type="varchar" MaxLength="10" />
+    <Property Name="Name" Type="varchar" MaxLength="50" />
+    <Property Name="Description" Type="varchar" MaxLength="100" />
     <Property Name="Quantity" Type="int" />
     <Property Name="Category_ID" Type="int" />
+    <Property Name="Price" Type="float" />
   </EntityType>
   <Association Name="FK__orders__Product___1BFD2C07">
     <End Role="tblProducts" Type="Self.tblProducts" Multiplicity="0..1" />
@@ -99,9 +103,37 @@ warning 6013: The table/view 'HOMENEEDS.dbo.tblCart' does not have a primary key
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Function Name="usp_AddCategoryByAdmin" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Name" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="usp_AddProductByAdmin" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Name" Type="varchar" Mode="In" />
+    <Parameter Name="Description" Type="varchar" Mode="In" />
+    <Parameter Name="Quantity" Type="int" Mode="In" />
+    <Parameter Name="Category" Type="varchar" Mode="In" />
+    <Parameter Name="price" Type="float" Mode="In" />
+  </Function>
+  <Function Name="uspAddtoCart" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="product_id" Type="int" Mode="In" />
+    <Parameter Name="customer_id" Type="int" Mode="In" />
+    <Parameter Name="quantity" Type="int" Mode="In" />
+  </Function>
   <Function Name="uspCheckUserAlreadyRegistered" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="Email_Address" Type="varchar" Mode="In" />
     <Parameter Name="mobile_number" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="uspDeleteFromCartUsingCustomerId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="customer_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspDeleteFromCartUsingProductId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="product_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspGetAllProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="uspGetAllProductsBasedOnCategory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="category_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspGetCustomerDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="customer_id" Type="int" Mode="In" />
   </Function>
   <Function Name="uspLogin" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="Email_Address" Type="varchar" Mode="In" />
@@ -112,9 +144,14 @@ warning 6013: The table/view 'HOMENEEDS.dbo.tblCart' does not have a primary key
     <Parameter Name="Email_Address" Type="varchar" Mode="In" />
     <Parameter Name="Password" Type="varchar" Mode="In" />
   </Function>
+  <Function Name="uspUpdateAddress" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="new_address" Type="varchar" Mode="In" />
+    <Parameter Name="email_adress" Type="varchar" Mode="In" />
+  </Function>
   <EntityContainer Name="HOMENEEDSModelStoreContainer">
     <EntitySet Name="orders" EntityType="Self.orders" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="tblAdmin" EntityType="Self.tblAdmin" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblCart" EntityType="Self.tblCart" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="tblCategories" EntityType="Self.tblCategories" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="tblCustomers" EntityType="Self.tblCustomers" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="tblLocations" EntityType="Self.tblLocations" Schema="dbo" store:Type="Tables" />

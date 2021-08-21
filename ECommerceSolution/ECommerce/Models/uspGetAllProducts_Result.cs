@@ -10,17 +10,14 @@
 namespace ECommerce.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class order
+    public partial class uspGetAllProducts_Result
     {
-        public int Order_ID { get; set; }
-        public Nullable<int> Product_ID { get; set; }
-        public Nullable<int> Customer_ID { get; set; }
-        public Nullable<System.DateTime> Purchased { get; set; }
-        public Nullable<System.DateTime> Delivery_Date { get; set; }
-        public string Order_Status { get; set; }
-    
-        public virtual tblProduct tblProduct { get; set; }
+        public int Product_ID { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public Nullable<int> Quantity { get; set; }
+        public Nullable<int> Category_ID { get; set; }
+        public Nullable<double> Price { get; set; }
     }
 }

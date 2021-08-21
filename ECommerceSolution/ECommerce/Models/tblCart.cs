@@ -12,15 +12,11 @@ namespace ECommerce.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class order
+    public partial class tblCart
     {
-        public int Order_ID { get; set; }
+        public int Item_No { get; set; }
         public Nullable<int> Product_ID { get; set; }
         public Nullable<int> Customer_ID { get; set; }
-        public Nullable<System.DateTime> Purchased { get; set; }
-        public Nullable<System.DateTime> Delivery_Date { get; set; }
-        public string Order_Status { get; set; }
-    
-        public virtual tblProduct tblProduct { get; set; }
+        public Nullable<int> Quantity { get; set; }
     }
 }

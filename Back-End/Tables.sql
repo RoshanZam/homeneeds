@@ -24,11 +24,13 @@ Availablity int,
 
 create table tblProducts 
 (Product_ID int identity(1,1) primary key,
-Name varchar(20),
-Description varchar(10),
+Name varchar(50),
+Description varchar(100),
 Quantity int,
 Category_ID int references tblCategories(Category_ID)
 )
+
+alter table tblproducts
 
 create table tblCategories
 (Category_ID int identity(1,1) primary key,
