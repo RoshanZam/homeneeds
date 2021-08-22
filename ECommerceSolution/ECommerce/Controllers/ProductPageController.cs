@@ -25,9 +25,10 @@ namespace ECommerce.Controllers
 
         [Route("GetProductsForCategory")]
         [HttpGet]
-        public HttpResponseMessage GetProductsForCategory(tblCategory category)
+        public HttpResponseMessage GetProductsForCategory(int category)
         {
-            var result = entities.uspGetAllProductsBasedOnCategory(category.Category_ID);
+            int category_id = category;
+            var result = entities.uspGetAllProductsBasedOnCategory(category_id);
             return Request.CreateResponse(result);
         }
 

@@ -2,11 +2,11 @@ Completed:
 backend tables defined
 web api and front end for login and register done
 user home page navigation isdone
+Web api for fetching products ()
 
 
 To Do:
 
-Web api for fetching products
 admin homepage to add products and view orders
 view profile
 view orders
